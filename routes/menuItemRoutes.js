@@ -19,7 +19,7 @@ router.post("/menu", async (req, res) => {
   }
 });
 
-router.get("/menu", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const data = await MenuItem.find();
     console.log("data fetched");
@@ -27,6 +27,22 @@ router.get("/menu", async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ err: "Internal server error" });
+  }
+});
+
+router.get("/:taste", async (req, res) => {
+  try {
+    const tasteType = req.params.taste; // // Extract the taste type from the URL parameter
+    if (tasteType == "sweet" || tasteType == "sour" || tasteType == "spicy") {
+      const response = await MenuItem.find({ taste: tasteType });
+      console.log("response fetched");
+      res.status(200).json(response);
+    } else {
+      res.status(404).json({ error: "Invalid Taste type" });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
